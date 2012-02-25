@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Background page</title>
+<script type="text/javascript">
+//Add Listener to execute library detection when tab is updated
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+	//Check if tab loading is completed
+	if (changeInfo.status === "complete") {
+		chrome.tabs.executeScript(tabId, {file: "library_detection.js"}, function(){
+	        //Callback
+	    })	
+	}
+});
+</script>
+</head>
+<body>
+
+</body>
+</html>
