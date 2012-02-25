@@ -1,0 +1,10 @@
+{
+    //Extension Manifest File Keys
+    "extName": {
+        "message": "Chrome Library Detector"
+    },
+    
+    "extDescription": {
+        "message": "Google Chrome Extension that detects js libraries running on a web page"
+    }
+}

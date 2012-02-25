@@ -1,0 +1,19 @@
+{
+    //Required
+    "name": "__MSG_extName__",
+    "version": "1.1",
+    
+    //Recommended
+    "description": "__MSG_extDescription__",
+    "default_locale": "en",
+    "icons": {
+        "16": "icons/extension/javascript-icon-16.png",
+        "20": "icons/extension/javascript-icon-20.png",
+        "32": "icons/extension/javascript-icon-32.png",
+        "48": "icons/extension/javascript-icon-48.png",
+        "64": "icons/extension/javascript-icon-64.png",
+        "128": "icons/extension/javascript-icon-128.png",
+        "256": "icons/extension/javascript-icon-256.png",
+        "512": "icons/extension/javascript-icon-512.png"
+    }
+}
