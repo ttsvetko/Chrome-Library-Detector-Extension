@@ -18,4 +18,10 @@
     }
     //Background Page
     "background_page": "background page/background_page.html",
+    
+    //Permissions
+    "permissions": [
+        "*://*/*", //Required to call "executeScript" in background page
+        "tabs"
+    ]
 }
