@@ -1,0 +1,1 @@
+<h1>Library Detector Chrome Extension</h1>
