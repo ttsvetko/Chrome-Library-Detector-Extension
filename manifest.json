@@ -15,7 +15,15 @@
         "128": "icons/extension/javascript-icon-128.png",
         "256": "icons/extension/javascript-icon-256.png",
         "512": "icons/extension/javascript-icon-512.png"
-    }
+    },
+    
+    //Action
+    "page_action": {
+        "default_icon": "icons/extension/javascript-icon-20.png",
+        "default_popup": "page action/popup.html",
+        "default_title": "__MSG_page_action_title__"
+    },
+    
     //Background Page
     "background_page": "background page/background_page.html",
     
