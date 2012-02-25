@@ -4,22 +4,54 @@
 <meta charset="UTF-8">
 <title>Background page</title>
 <script type="text/javascript">
-
-chrome.extension.onRequest.addListener(function(request, sender) {
-    if (request.libraries) {
-        //Notify the action page for the test result
-    }
-});
-
-//Add Listener to execute library detection when tab is updated
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-	//Check if tab loading is completed
-	if (changeInfo.status === "complete") {
-		chrome.tabs.executeScript(tabId, {file: "library_detection.js"}, function(){
-	        //Callback
-	    })	
+(function(win){
+	var localStorage = win.localStorage;
+	
+	//Clear the localStorage from previously stored data if there is any
+	localStorage.clear();
+	
+	/**
+	 * Insert script into a tab with specified id
+	 * if it's status is completed
+	 */
+	function executeScript(tabId, tabStatus) {
+		//Check if tab loading is completed
+		if (tabStatus === "complete") {
+	        chrome.tabs.executeScript(tabId, {file: "library_detection.js"}, function(){
+	            //Callback
+	        })  
+	    }
 	}
-});
+	
+	//Add Listener to execute library detection when tab is updated
+	chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+		executeScript(tabId, changeInfo.status);
+	});
+	
+	//Add onRemove listener to delete stored data for closing tabs
+	chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+		localStorage.removeItem(tabId);
+	});
+	
+	//Test currently open tabs
+	chrome.tabs.query({}, function(tabsArr) {
+		var i = -1, len = tabsArr.length,
+		   tab;
+		
+		for (i; tab = tabsArr[++i]; i < len) {
+			executeScript(tab.id, tab.status);
+		}
+	});
+	
+	//Add onRequest Listener
+	chrome.extension.onRequest.addListener(function(request, sender) {
+	    if (request.libraries) {
+	        //Process the response and set action page
+	        localStorage[sender.tab.id] = request.libraries;
+	        
+	    }
+	});
+}(window));
 </script>
 </head>
 <body>
