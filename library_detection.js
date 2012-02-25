@@ -5,6 +5,11 @@
 	
 	function libraries_test(win) {
 		var libraries = {
+			/*
+			 * NOTE: ALL LIBRARIES TESTED HERE SHOULD HAVE
+			 * AND OBJECT PROPERTY WITH DETAILED INFORMATION
+			 * IN THE ACTION PAGE OF THE EXTENSION!!!
+			 */
 				"jQuery": function() {
 					var version = undefined,
 						jq = win.jQuery || win.$ || win.$jq || win.$j;
