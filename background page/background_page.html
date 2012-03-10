@@ -46,8 +46,20 @@
 	//Add onRequest Listener
 	chrome.extension.onRequest.addListener(function(request, sender) {
 	    if (request.libraries) {
+	    	chrome.pageAction.show(sender.tab.id);
 	        //Process the response and set action page
-	        localStorage[sender.tab.id] = request.libraries;
+	        localStorage[sender.tab.id] = (function() {
+	        	var libraries = request.libraries,
+	        	  library;
+	        	
+	        	for (library in libraries) {
+	        		if (!libraries[library]) {
+	        			delete libraries[library];
+	        		}
+	        	}
+	        	
+	        	return libraries;
+	        }());
 	        
 	    }
 	});
