@@ -14,10 +14,6 @@
 				}()
 			},
 			
-			detected_libraries = {},
-			lib,
-			isDetected = false,
-			
 			/* Keep local pointer to localStorage object */
 			localStorage = win.localStorage,
 			
@@ -48,32 +44,12 @@
 		        win.dispatchEvent(storageEvent);
 			};
 			
-			/*
-			 * Itterate between all libraries and 
-			 * keep detected only.
-			 * 
-			 * Set flag that library is detected
-			 * 
-			 */
-			for (lib in libraries) {
-				if (libraries[lib]) {
-					detected_libraries[lib] = libraries[lib];
-					isDetected = true;
-				}
-			}
 			
-			/*
-			 * If library is detected - set in localStorage and 
-			 * trigger onstorage event to notify the background page
-			 * 
+			localStorage.setItem(localStorageKey, JSON.stringify(libraries));
+			/**
+			 * Trigger manually onstorage event
 			 */
-			if (isDetected) {
-				localStorage.setItem(localStorageKey, JSON.stringify(detected_libraries));
-				/**
-				 * Trigger manually onstorage event
-				 */
-				triggerStorageEvent();
-			}
+			triggerStorageEvent();
 			
 	};
 	
