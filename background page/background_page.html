@@ -35,7 +35,8 @@
 	
 	
 	/**
-	 * onActivated Listener
+	 * onActivated Listener(Chrome dev/Canary builds(version 18+))
+	 * onActiveChanged Listener(Chrome stable release(version 17))
 	 *
 	 * Fires when the active tab in a window changes. 
 	 * Note that the tab's URL may not be set at the time this event fired, 
@@ -94,10 +95,16 @@
 	 * 
 	 */
 	chrome.extension.onRequest.addListener(function(request, sender) {
-		//Show page action
-		chrome.pageAction.show(sender.tab.id);
-		//Store test result in localStorage
-		localStorage[sender.tab.id] = JSON.stringify(request);
+		var lib,
+			libs = request,
+			tabId = sender.tab.id;
+		
+		for (lib in libs) {
+			//Show page action
+			chrome.pageAction.show(tabId);
+			//Store test result in localStorage
+			localStorage[tabId] = JSON.stringify(libs);
+		}
 	});
 	
 	
