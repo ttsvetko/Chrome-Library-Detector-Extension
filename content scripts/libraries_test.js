@@ -4,7 +4,8 @@
 	var libraries_test = function libraries_test (win) {
 		var libraries = {
 				"jQuery": function() {
-					var version = undefined,
+					var version = undefined;
+					
 						jq = win.jQuery || win.$ || win.$jq || win.$j;
 	                    if (jq && jq.fn && jq.fn.jquery) {
 	                    	version = jq.fn.jquery;
@@ -83,5 +84,5 @@
 	 * so can have access to the global window object.
 	 * 
 	 */
-    win.location = "javascript: " + libraries_test.toString() + "; libraries_test(window); alert('test'); void(0);";
+    win.location = "javascript: " + libraries_test.toString() + "; libraries_test(window); void(0);";
 }(window));

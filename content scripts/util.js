@@ -1,19 +1,32 @@
 (function(win) {
 	"use strict";
 	
-	/*
-	 * OnStorage Event
-	 * 
-	 * Send message to the background page with detected libraries.
-	 * Clear the stored result in the localStorage on callback
-	 */
-	win.addEventListener("storage", function(event) {
-		console.log(event)
-		chrome.extension.sendRequest({libraries: win.localStorage[event.key]}, function(response) {
-			delete win.localStorage[localStorageKey];
-		});
-	}, false);
+	var onStorageEventListener = function(event) {
+		var localStorage_key = event.key,
+			localStorage = win.localStorage;
+		
+		
+		chrome.extension.sendRequest(JSON.parse(localStorage[localStorage_key]));
+		delete localStorage[localStorage_key];
+		removeLocalStorageEventListner();
+		
+	},
+	
+	addLocalStorageEventListener = function() {
+		/*
+		 * OnStorage Event
+		 * 
+		 * Send message to the background page with detected libraries.
+		 * Clear the stored result in the localStorage on callback
+		 */
+		win.addEventListener("storage", onStorageEventListener, false);
+	},
+	
+	removeLocalStorageEventListner = function() {
+		win.removeEventListener("storage", onStorageEventListener, false);
+	};
 	
 	
+	addLocalStorageEventListener();
 	
 }(window));

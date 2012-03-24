@@ -5,68 +5,125 @@
 <title>Background page</title>
 <script type="text/javascript">
 (function(win){
-	var localStorage = win.localStorage;
+	var localStorage = win.localStorage,
+		/*
+		 * Regular expression that test for chrome specific urls
+		 * (chrome://devtools, chrome://extensions etc.)
+		 */
+		chromeSpecificURL = /^chrome/i,
+		/*
+		 * Define scripts that will be executed when tab is created/update
+		 *	@param url:	file location
+		 *	@param callback: callback function to call 
+		 *					when script finish execution
+		 */
+		injectJSFiles = [
+			{
+				callback: null,
+				url: "content scripts/util.js"
+			},{
+				callback: null,
+				url: "content scripts/libraries_test.js"
+			}
+		]
 	
-	//Clear the localStorage from previously stored data if there is any
+	
+	
+	//Clear previous stored data
 	localStorage.clear();
+	
+	
+	
+	/**
+	 * onActivated Listener
+	 *
+	 * Fires when the active tab in a window changes. 
+	 * Note that the tab's URL may not be set at the time this event fired, 
+	 * so we listen for update event.
+	 *
+	 * activeInfo ( object )
+	 *	 tabId ( integer )
+	 *		 The ID of the tab that has become active.
+	 *	 windowId ( integer )
+	 *		 The ID of the window the active tab changed inside of.
+	 */
+	(chrome.tabs.onActivated || chrome.tabs.onActiveChanged).addListener(function(activeInfo) {
+		var tabId = typeof(activeInfo) === "number" ? activeInfo : activeInfo.tabId;
+		
+		/*
+		 * If page is not tested, get tab details and do test
+		 */
+		if (!localStorage[tabId]) {
+			chrome.tabs.get(tabId, function(tab) {
+				executeScript(tab);
+			})
+		}
+	});
+	
+	
+	
+	/**
+	 * OnUpdate listener
+	 * 
+	 * Listens for tab update(url, active, highlighted, pinned or openerTabId 
+	 * properties are updated) and do test when url is updated
+	 *
+	 * TODO: DO NOT test when url hash is updated only
+	 */
+	chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+		executeScript(tab);
+	});
+	
+	
+	
+	
+	/**
+	 * onRemove Listener
+	 *
+	 * Fired when a tab is closed. 
+	 * 
+	 * Remove stored data for closed tab.
+	 */
+	chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
+		localStorage.removeItem(tabId);
+	});
+	
+	
+	
+	/**
+	 * 
+	 */
+	chrome.extension.onRequest.addListener(function(request, sender) {
+		//Show page action
+		chrome.pageAction.show(sender.tab.id);
+		//Store test result in localStorage
+		localStorage[sender.tab.id] = JSON.stringify(request);
+	});
+	
+	
+	
 	
 	/**
 	 * Insert script into a tab with specified id
 	 * if it's status is completed
 	 */
-	function executeScript(tabId, tabStatus) {
+	function executeScript(tab) {
+		var id = tab.id,
+			status = tab.status,
+			url = tab.url,
+			
+			i = -1, len = injectJSFiles.length, item;
 		//Check if tab loading is completed
-		if (tabStatus === "complete") {
-	        chrome.tabs.executeScript(tabId, {file: "library_detection.js"}, function(){
-	            //Callback
-	        })  
-	    }
-	}
-	
-	//Add Listener to execute library detection when tab is updated
-	chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-		executeScript(tabId, changeInfo.status);
-	});
-	
-	//Add onRemove listener to delete stored data for closing tabs
-	chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
-		localStorage.removeItem(tabId);
-	});
-	
-	//Test currently open tabs
-	chrome.tabs.query({}, function(tabsArr) {
-		var i = -1, len = tabsArr.length,
-		   tab;
-		
-		for (i; tab = tabsArr[++i]; i < len) {
-			executeScript(tab.id, tab.status);
+		if (status === "complete" && !url.match(chromeSpecificURL)) {
+			for (i; item = injectJSFiles[++i]; i < len) {
+				chrome.tabs.executeScript(id, {file: item.url}, item.callback || function() {/* Callback */});
+			}
 		}
-	});
-	
-	//Add onRequest Listener
-	chrome.extension.onRequest.addListener(function(request, sender) {
-	    if (request.libraries) {
-	    	chrome.pageAction.show(sender.tab.id);
-	        //Process the response and set action page
-	        localStorage[sender.tab.id] = (function() {
-	        	var libraries = request.libraries,
-	        	  library;
-	        	
-	        	for (library in libraries) {
-	        		if (!libraries[library]) {
-	        			delete libraries[library];
-	        		}
-	        	}
-	        	
-	        	return libraries;
-	        }());
-	        
-	    }
-	});
+	}
 }(window));
 </script>
 </head>
 <body>
-
+	<canvas id="pageActionIcon"></canvas>
 </body>
 </html>
