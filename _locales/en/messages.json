@@ -1,5 +1,4 @@
 {
-    //Extension Manifest File Keys
     "extName": {
         "message": "Chrome Library Detector"
     },
@@ -8,8 +7,7 @@
         "message": "Google Chrome Extension that detects js libraries running on a web page"
     },
     
-    //Page Action Keys
-    "page_action_title": {
+   "page_action_title": {
         "message": "Click to see a list of javascript libraries that run on this web page"
     }
 }
