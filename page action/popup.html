@@ -3,8 +3,88 @@
 <head>
 <meta charset="UTF-8">
 <title>Page action popup</title>
+<link rel="stylesheet" type="text/css" href="pageAction.css" />
+
+<script type="text/javascript">
+	(function(win) {
+		var libs,
+		libsList,
+		template, logo, name, version, homePage;
+		
+		/**
+		 * initialize the template
+		 */
+		function initializeTemplate() {
+			libsList = document.getElementById("list");
+			template = document.querySelector("ul#template li.lib");
+			logo = document.querySelector("ul#template .logo");
+			name = document.querySelector("ul#template .name");
+			version = document.querySelector("ul#template .version");
+			homePage = document.querySelector("ul#template .homePage");
+		}
+
+		
+		/**
+		 * 
+		 */
+		function addLibs(){
+			var lib,
+				fragment = document.createDocumentFragment(),
+				item;
+			
+			if (libs){
+				initializeTemplate();
+				
+				for (lib in libs){
+					logo.src = chrome.extension.getURL("icons/libraries/" + lib + ".png");
+					name.innerText = lib;
+					version.innerText = libs[lib].version || "";
+					if (libs[lib].homePage) {
+						homePage.href = libs[lib].homePage;
+					} else {
+						homePage.style.display = "none"
+					}
+					item = template.cloneNode(true);
+					fragment.appendChild(item);
+				}
+				libsList.appendChild(fragment);
+			}
+		}
+		
+		/**
+		 * 
+		 */
+		function pageLoad(){
+			//Get current window
+			chrome.windows.getCurrent(function(window) {
+				//Get the curren active tab with parent current window
+				chrome.tabs.query({active: true, windowId: window.id}, function(tabsArr) {
+					var tab = tabsArr[0],
+						lib;
+					
+					libs = JSON.parse(localStorage[tab.id]),
+					
+					addLibs();
+				})
+			})
+		}
+		
+		
+		win.addEventListener("DOMContentLoaded", pageLoad, false);
+	}(window));
+</script>
 </head>
 <body>
-
+	<ul id="list" class="list"></ul>
+	<ul id="template" class="template list">
+		<li class="lib">
+			<div class="libInfo">
+				<img class="logo" src="../icons/libraries/jQuery.png"/>
+				<div class="name">jQuery</div>
+				<div class="version">1.4.4</div>
+			</div>
+			<a class="homePage" href="#" target="_blank" alt="Home page" title="Home Page"></a>
+		</li>
+	</ul>
 </body>
 </html>
