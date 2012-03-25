@@ -1,0 +1,62 @@
+@CHARSET "UTF-8";
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.list {
+	list-style: none;
+	list-style-position: inside;
+	margin: 0;
+	padding:0;
+	min-width: 200px;
+}
+
+.list li {
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FFFFFF), color-stop(100%,#EEEEEE)); /* webkit */
+	display: -webkit-box;
+	-webkit-box-align: stretch;
+	border: 1px solid #CCC;
+}
+
+.list li:first-child {
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-bottom: none;
+}
+
+.list li:last-child {
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+.libInfo {
+	-webkit-box-flex: 1;
+	display: -webkit-box;
+	padding: 10px 15px;
+}
+
+.logo,
+.name {
+	-webkit-margin-end: 5px;
+}
+
+.version {
+	color: rgba(107,107,107,1);
+}
+
+.homePage {
+	background: rgba(224,224,224,1) url("../icons/home.png") no-repeat center;
+	border-left: 1px solid #CCC;
+	cursor: default;
+	display: block;
+	line-height: 34px;
+	outline: none;
+	text-indent: -9999px;
+	width: 40px;
+}
+
+.template {
+	display: none;
+}
