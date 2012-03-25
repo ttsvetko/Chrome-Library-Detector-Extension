@@ -10,7 +10,7 @@
 		 * Regular expression that test for chrome specific urls
 		 * (chrome://devtools, chrome://extensions etc.)
 		 */
-		chromeSpecificURL = /^chrome/i,
+		chromeSpecificURL = /^(chrome|file)/i,
 		/*
 		 * Define scripts that will be executed when tab is created/update
 		 *	@param url:	file location
