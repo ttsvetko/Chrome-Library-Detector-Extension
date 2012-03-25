@@ -97,13 +97,32 @@
 	chrome.extension.onRequest.addListener(function(request, sender) {
 		var lib,
 			libs = request,
-			tabId = sender.tab.id;
+			i = 0,
+			tabId = sender.tab.id,
+			
+			response = {};
+		
 		
 		for (lib in libs) {
-			//Show page action
-			chrome.pageAction.show(tabId);
+			++i;
+		}
+		
+		if (i > 0) {
+			draw(i, function(imageDate) {
+				chrome.pageAction.setIcon({
+					tabId: tabId,
+					imageData: imageData
+				});
+				//Show page action
+				chrome.pageAction.show(tabId);
+			});
+			
 			//Store test result in localStorage
 			localStorage[tabId] = JSON.stringify(libs);
+		}
+		
+		if (sendResponse) {
+			sendResponse(response);
 		}
 	});
 	
@@ -126,6 +145,35 @@
 				chrome.tabs.executeScript(id, {file: item.url}, item.callback || function() {/* Callback */});
 			}
 		}
+	}
+	
+	
+	
+	function draw(libsCount, callback) {
+		var canvas = document.getElementById('pageActionIcon'),
+			ctx = canvas.getContext('2d'),
+			string = new String(libsCount),
+			fontSize = 8,
+			imageSize = 19,
+			padding = 1,
+			image = new Image(),
+			imageDate;
+		
+		image.onload = function() {
+			ctx.drawImage(image, 0, 0);
+			
+			ctx.fillStyle = "rgba(255,0,0,0.8)";
+			ctx.fillRect(imageSize - string.length*fontSize - 2*padding, 0, string.length*fontSize + 2*padding, fontSize + 2*padding);
+			
+			ctx.font = fontSize + "px bold, sans-serif";
+			ctx.fillStyle = "White";
+			ctx.fillText(string, string.length*fontSize + (4*padding)/(string.length > 1 ? 4 : 1), fontSize - padding);
+			
+			imageData = ctx.getImageData(0, 0, 19, 19);
+			
+			callback && callback(imageData);
+		}
+		image.src=chrome.extension.getURL("icons/extension/javascript-icon-19.png");
 	}
 }(window));
 </script>
