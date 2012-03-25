@@ -589,5 +589,5 @@
 	 * so can have access to the global window object.
 	 * 
 	 */
-    win.location = "javascript: " + libraries_test.toString() + "; libraries_test(window); void(0);";
+    win.location = "javascript: " + libraries_test.toString() + "; libraries_test(window); window.libraries_test = null; void(0);";
 }(window));
