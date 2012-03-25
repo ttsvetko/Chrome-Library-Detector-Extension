@@ -94,7 +94,7 @@
 	/**
 	 * 
 	 */
-	chrome.extension.onRequest.addListener(function(request, sender) {
+	chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 		var lib,
 			libs = request,
 			i = 0,
