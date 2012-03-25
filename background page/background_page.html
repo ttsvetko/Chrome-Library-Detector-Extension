@@ -160,7 +160,7 @@
 			imageDate;
 		
 		image.onload = function() {
-			ctx.drawImage(image, 0, 0);
+			ctx.drawImage(image, 0, 3);
 			
 			ctx.fillStyle = "rgba(255,0,0,0.8)";
 			ctx.fillRect(imageSize - string.length*fontSize - 2*padding, 0, string.length*fontSize + 2*padding, fontSize + 2*padding);
@@ -173,7 +173,7 @@
 			
 			callback && callback(imageData);
 		}
-		image.src=chrome.extension.getURL("icons/extension/javascript-icon-19.png");
+		image.src=chrome.extension.getURL("icons/extension/javascript-icon-16.png");
 	}
 }(window));
 </script>
