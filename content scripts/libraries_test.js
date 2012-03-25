@@ -570,13 +570,16 @@
 		        win.dispatchEvent(storageEvent);
 			};
 			
+			/*
+			 * NOTE: base2.DOM modifies the JSON Object
+			 */
+			localStorage.setItem(localStorageKey, ((JSON.stringify && JSON.stringify(libraries)) || 
+					(JSON.Object && JSON.Object.toJSONString && JSON.Object(libraries).toJSONString())) );
 			
-			localStorage.setItem(localStorageKey, JSON.stringify(libraries));
 			/**
 			 * Trigger manually onstorage event
 			 */
 			triggerStorageEvent();
-			
 	};
 	
 	/*
